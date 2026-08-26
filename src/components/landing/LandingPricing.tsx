@@ -1,191 +1,117 @@
-const CheckIcon = () => (
-  <svg
-    className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-    aria-hidden
-  >
-    <path
-      fillRule="evenodd"
-      d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
-      clipRule="evenodd"
-    />
-  </svg>
-)
-
-const DotIcon = () => (
-  <span
-    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-border"
-    aria-hidden
-  />
-)
-
-type Feature = { label: string; active: boolean }
-
-interface Plan {
-  slug: string
-  name: string
-  subtitle: string
-  price: string
-  badge?: string
-  featured?: boolean
-  features: Feature[]
-}
+import { PricingCard, type Plan } from './PricingCard'
+import { Reveal } from './Reveal'
+import { Section, SectionHeading, waLink } from './ui'
+import { Wave } from './Wave'
 
 const plans: Plan[] = [
   {
-    slug: 'sederhana',
-    name: 'Sederhana',
-    subtitle: 'Wedding · Birthday · Aqiqah',
-    price: 'Rp 49.000',
-    features: [
-      { label: 'Link undangan aktif', active: true },
-      { label: 'RSVP konfirmasi hadir', active: true },
-      { label: 'Info acara & lokasi', active: true },
-      { label: 'Bagikan via WA & QR', active: true },
-      { label: 'Galeri foto', active: false },
-      { label: 'Amplop digital', active: false },
-      { label: 'Musik latar', active: false },
-    ],
+    slug: 'wedding',
+    name: 'Undangan Wedding',
+    subtitle: 'Pernikahan, akad, dan resepsi',
+    price: 250_000,
+    activeMonths: 12,
+    inviteQuota: 300,
+    waQuota: 100,
+    ctaHref: '/templates',
+    ctaLabel: 'Lihat contoh',
   },
   {
-    slug: 'elegan',
-    name: 'Elegan',
-    subtitle: 'Wedding · Anniversary · Wisuda',
-    price: 'Rp 99.000',
-    badge: 'Terlaris',
-    featured: true,
-    features: [
-      { label: 'Semua fitur Sederhana', active: true },
-      { label: 'Galeri foto (maks 20)', active: true },
-      { label: 'Musik latar pilihan', active: true },
-      { label: 'Countdown timer acara', active: true },
-      { label: 'Amplop digital & rekening', active: true },
-      { label: 'Ucapan & doa tamu', active: true },
-      { label: 'Custom domain', active: false },
-    ],
+    slug: 'birthday',
+    name: 'Undangan Birthday',
+    subtitle: 'Ulang tahun, aqiqah, dan syukuran',
+    price: 150_000,
+    activeMonths: 12,
+    inviteQuota: 150,
+    waQuota: 40,
+    // ponytail: belum ada template birthday — arahkan ke form di hero, bukan
+    // ke preview palsu. Ganti ke /template4 kalau template birthday jadi.
+    ctaHref: '#mulai',
+    ctaLabel: 'Buat undangan',
   },
   {
-    slug: 'mewah',
-    name: 'Mewah',
-    subtitle: 'Wedding · Corporate · Gala',
-    price: 'Rp 199.000',
-    badge: 'Premium',
-    features: [
-      { label: 'Semua fitur Elegan', active: true },
-      { label: 'Galeri foto tak terbatas', active: true },
-      { label: 'Custom domain sendiri', active: true },
-      { label: 'Video intro undangan', active: true },
-      { label: 'Manajemen tamu & tabel', active: true },
-      { label: 'Rekap RSVP (export CSV)', active: true },
-      { label: 'Prioritas support WA', active: true },
-    ],
+    slug: 'custom',
+    name: 'Undangan Custom',
+    subtitle: 'Desain dibuat dari nol, bukan dari template',
+    // Bespoke work has no fixed scope, so there is no honest number to print.
+    price: null,
+    priceNote: 'harga sesuai kebutuhan',
+    activeMonths: 24,
+    inviteQuota: null,
+    waQuota: 200,
+    ctaHref: waLink(
+      'Halo Temukita, saya ingin tanya soal paket Undangan Custom.',
+    ),
+    ctaLabel: 'Chat WhatsApp',
   },
 ]
 
-function PricingCard({ plan }: { plan: Plan }) {
-  return (
-    <li
-      className={[
-        'relative flex flex-col rounded-2xl border bg-background',
-        plan.featured
-          ? 'border-2 border-accent shadow-xl shadow-accent/10'
-          : 'border-border shadow-sm shadow-foreground/5',
-      ].join(' ')}
-    >
-      {/* Name + badge */}
-      <div className="flex items-center gap-2 px-6 pt-5">
-        <h3 className="text-lg font-bold text-foreground">{plan.name}</h3>
-        {plan.badge && (
-          <span
-            className={[
-              'rounded-full px-2 py-0.5 text-[11px] font-semibold',
-              plan.featured
-                ? 'bg-accent/10 text-accent'
-                : 'bg-foreground/8 text-foreground/60',
-            ].join(' ')}
-          >
-            {plan.badge}
-          </span>
-        )}
-      </div>
+// Berlaku di semua paket — tidak ada fitur yang digembok antar card.
+const features = [
+  'Link undangan aktif',
+  'RSVP konfirmasi hadir',
+  'Info acara, peta, & countdown',
+  'Galeri foto & musik latar',
+  'Amplop digital & buku ucapan',
+  'Bagikan via WA & QR',
+  'Rekap RSVP & daftar tamu',
+]
 
-      {/* Subtitle */}
-      <p className="px-6 pt-1 text-xs text-subtle">{plan.subtitle}</p>
-
-      {/* Price */}
-      <p
-        className={[
-          'px-6 pt-4 text-2xl font-bold',
-          plan.featured ? 'text-accent' : 'text-foreground',
-        ].join(' ')}
-      >
-        {plan.price}
-      </p>
-
-      {/* Feature list */}
-      <ul className="mt-5 flex flex-col gap-2.5 px-6">
-        {plan.features.map((f) => (
-          <li
-            key={f.label}
-            className={[
-              'flex items-start gap-2 text-sm',
-              f.active ? 'text-foreground' : 'text-subtle',
-            ].join(' ')}
-          >
-            {f.active ? <CheckIcon /> : <DotIcon />}
-            {f.label}
-          </li>
-        ))}
-      </ul>
-
-      {/* CTA */}
-      <div className="mt-auto px-6 pb-6 pt-8">
-        <a
-          href={`#preview-${plan.slug}`}
-          className={[
-            'flex h-11 w-full items-center justify-center rounded-full border text-sm font-semibold transition-colors',
-            plan.featured
-              ? 'border-accent bg-accent text-white hover:bg-accent-hover'
-              : 'border-border bg-background text-foreground hover:border-accent/40 hover:bg-surface',
-          ].join(' ')}
-        >
-          Lihat preview
-        </a>
-      </div>
-    </li>
-  )
-}
+// Kuota undangan sudah bisa ditambah langsung di kartu, jadi tidak diulang di sini.
+const addons = [
+  '+100 pesan WA blast — Rp 79.000',
+  'Perpanjang 12 bulan — Rp 49.000',
+]
 
 export function LandingPricing() {
   return (
-    <section
+    <Section
       id="harga"
-      className="border-b border-border/60 bg-surface py-20 sm:py-28"
-      aria-labelledby="harga-heading"
+      labelledBy="harga-heading"
+      tone="surface"
+      bleed={<Wave position="top" className="text-background" />}
     >
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        {/* Section label */}
-        <p className="mb-3 text-xs font-bold uppercase tracking-widest text-subtle">
-          Contoh template &amp; bundle fitur
-        </p>
-        <h2
+      <Reveal>
+        <SectionHeading
           id="harga-heading"
-          className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+          eyebrow="Harga & kuota"
+          title={
+            <>
+              Bayar sesuai <span className="text-accent">jumlah undangan</span>
+            </>
+          }
         >
-          Pilih paket yang sesuai acara Anda
-        </h2>
-        <p className="mt-3 max-w-xl text-subtle">
-          Mulai gratis, lalu pilih paket yang sesuai. Semua harga sudah termasuk
-          akses seumur hidup undangan.
-        </p>
+          Bayar sekali, tanpa langganan bulanan. Semua fitur dasar ada di setiap
+          paket — atur jumlah undangan sesuai besar acara Anda.
+        </SectionHeading>
+      </Reveal>
 
-        <ul className="mt-12 grid gap-6 lg:grid-cols-3">
-          {plans.map((plan) => (
-            <PricingCard key={plan.slug} plan={plan} />
+      {/* Three cards never divide evenly into two columns, so it goes straight
+          from one column to three — a lone card on a second row is what made
+          the heights look mismatched in the first place. */}
+      <ul className="mt-14 grid gap-8 lg:grid-cols-3">
+        {plans.map((plan, i) => (
+          <Reveal key={plan.slug} delay={i * 0.08} className="flex">
+            <li className="flex w-full">
+              <PricingCard plan={plan} features={features} />
+            </li>
+          </Reveal>
+        ))}
+      </ul>
+
+      {/* Add-ons — dijual setelah pembelian, bukan paket terpisah */}
+      <Reveal className="mt-10">
+        <p className="text-xs font-semibold text-foreground">
+          Add-on setelah undangan aktif
+        </p>
+        <ul className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs text-subtle">
+          {addons.map((a) => (
+            <li key={a}>{a}</li>
           ))}
         </ul>
-      </div>
-    </section>
+        <p className="mt-3 text-xs text-subtle">
+          WA blast dikirim lewat WhatsApp Business API resmi.
+        </p>
+      </Reveal>
+    </Section>
   )
 }

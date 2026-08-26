@@ -1,27 +1,56 @@
+import { Reveal } from './Reveal'
+import { Button, Section, SectionHeading } from './ui'
+import { Wave } from './Wave'
+
 export function LandingCta() {
   return (
-    <section
-      className="border-b border-border/60 bg-linear-to-br from-background via-surface to-background py-20 sm:py-24"
-      aria-labelledby="cta-heading"
+    <Section
+      labelledBy="cta-heading"
+      tone="none"
+      className="bg-linear-to-br from-accent via-accent to-accent-hover py-24 sm:py-32"
+      innerClassName="text-center"
+      bleed={
+        <>
+          {/* wave coming down from the pricing section */}
+          <Wave position="top" className="text-surface" layered />
+
+          {/* soft drifting wave accents */}
+          <div
+            className="animate-wave-drift pointer-events-none absolute -left-24 top-10 h-64 w-64 rounded-[100%] bg-white/10 blur-3xl"
+            aria-hidden
+          />
+          <div
+            className="animate-wave-drift pointer-events-none absolute -right-16 bottom-4 h-56 w-72 rounded-[100%] bg-white/10 blur-3xl"
+            aria-hidden
+          />
+
+          {/* wave flowing into the footer */}
+          <Wave position="bottom" className="text-background" />
+        </>
+      }
     >
-      <div className="mx-auto max-w-5xl px-4 text-center sm:px-6">
-        <h2
+      <Reveal>
+        <SectionHeading
           id="cta-heading"
-          className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
+          title={
+            <>
+              Siap membuat undangan digital{' '}
+              <span className="text-ring">pertama Anda?</span>
+            </>
+          }
+          tone="dark"
+          align="center"
         >
-          Siap membuat undangan digital pertama Anda?
-        </h2>
-        <p className="mx-auto mt-4 max-w-lg text-subtle">
           Mulai dari satu halaman yang tenang dan mudah dibagikan — lalu
           kembangkan sesuai kebutuhan acara Anda.
-        </p>
-        <a
-          href="#mulai"
-          className="mt-10 inline-flex h-12 items-center justify-center rounded-full bg-accent px-10 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
-        >
-          Buat undangan
-        </a>
-      </div>
-    </section>
+        </SectionHeading>
+
+        <div className="mt-10">
+          <Button href="#harga" variant="inverted" size="lg">
+            Buat undangan
+          </Button>
+        </div>
+      </Reveal>
+    </Section>
   )
 }

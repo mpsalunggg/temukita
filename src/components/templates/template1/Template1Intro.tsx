@@ -3,40 +3,31 @@
 import Image from "next/image";
 import { motion } from "motion/react";
 import { cover } from "./assets";
+import { CornerSpray, FloralDivider } from "./Florals";
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 const container = {
   hidden: {},
   show: {
-    transition: { staggerChildren: 0.15, delayChildren: 0.3 },
+    transition: { staggerChildren: 0.14, delayChildren: 0.3 },
   },
 };
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
-  },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
 };
 
-const title = {
-  hidden: { opacity: 0, y: 24, scale: 0.96 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] as const },
-  },
+/** Names wipe up from behind a mask rather than fading in place. */
+const wipeUp = {
+  hidden: { y: "110%" },
+  show: { y: "0%", transition: { duration: 1.1, ease: EASE } },
 };
 
 const lineGrow = {
   hidden: { opacity: 0, scaleX: 0 },
-  show: {
-    opacity: 1,
-    scaleX: 1,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
-  },
+  show: { opacity: 1, scaleX: 1, transition: { duration: 0.6, ease: EASE } },
 };
 
 interface Template1IntroProps {
@@ -47,8 +38,7 @@ interface Template1IntroProps {
 
 export function Template1Intro({ guestName, onOpen }: Template1IntroProps) {
   return (
-    <div className="relative flex h-full min-h-screen w-full flex-col items-center justify-center overflow-hidden">
-      {/* background photo */}
+    <div className="grain grain-dark relative flex h-full min-h-svh w-full flex-col items-center justify-center overflow-hidden bg-ink">
       <Image
         src={cover}
         alt="Cover undangan"
@@ -57,68 +47,101 @@ export function Template1Intro({ guestName, onOpen }: Template1IntroProps) {
         priority
         sizes="100vw"
       />
+      {/* Two-layer scrim: a light base keeps the photo alive at the edges, an
+          elliptical vignette darkens exactly where the copy sits. A flat
+          overlay had to choose between the two. */}
+      <div className="absolute inset-0 bg-ink/50" aria-hidden />
+      <div
+        className="absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_50%_50%,rgba(35,33,29,0.86)_0%,rgba(35,33,29,0.8)_48%,rgba(35,33,29,0.18)_100%)]"
+        aria-hidden
+      />
 
-      {/* dark overlay */}
-      <div className="absolute inset-0 bg-black/60" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-4 border border-ivory/25 sm:inset-7"
+        aria-hidden
+      />
+      <CornerSpray className="pointer-events-none absolute -left-4 -top-4 h-32 w-32 text-ivory/25 sm:h-44 sm:w-44" />
+      <CornerSpray className="pointer-events-none absolute -bottom-4 -right-4 h-32 w-32 -scale-100 text-ivory/25 sm:h-44 sm:w-44" />
 
-      {/* content */}
       <motion.div
-        className="relative z-10 flex flex-col items-center gap-6 px-8 text-center text-white"
+        className="relative z-10 flex flex-col items-center px-8 text-center text-ivory"
         variants={container}
         initial="hidden"
         animate="show"
       >
         <motion.p
-          className="text-xs font-semibold uppercase tracking-[0.3em] text-white/60"
+          className="text-[10px] font-medium uppercase tracking-[0.5em] text-ivory/80"
           variants={fadeUp}
         >
           Undangan Pernikahan
         </motion.p>
 
-        <motion.h1
-          className="font-light text-white"
-          style={{ fontSize: "clamp(2rem, 7vw, 3.5rem)", lineHeight: 1.1 }}
-          variants={title}
+        <h1
+          className="mt-8 font-display font-normal leading-[0.9]"
+          style={{ fontSize: "clamp(2.8rem, 13vw, 6rem)" }}
         >
-          Arinda
-          <span className="mx-3 text-white/40">&</span>
-          Bagas
-        </motion.h1>
+          <span className="block overflow-hidden pb-[0.06em]">
+            <motion.span className="block" variants={wipeUp}>
+              Arinda
+            </motion.span>
+          </span>
+          <span className="block overflow-hidden pb-[0.06em]">
+            <motion.span
+              className="block italic text-sage-soft"
+              style={{ fontSize: "0.5em" }}
+              variants={wipeUp}
+            >
+              &amp;
+            </motion.span>
+          </span>
+          <span className="block overflow-hidden pb-[0.06em]">
+            <motion.span className="block" variants={wipeUp}>
+              Bagas
+            </motion.span>
+          </span>
+        </h1>
 
-        <motion.p className="text-sm tracking-widest text-white/50" variants={fadeUp}>
-          14 · 06 · 2026
+        <motion.p
+          className="mt-8 text-[11px] uppercase tracking-[0.42em] text-ivory/75"
+          variants={fadeUp}
+        >
+          Sabtu · 14 Juni 2026
         </motion.p>
 
         {guestName && (
-          <motion.div className="mt-2" variants={fadeUp}>
-            <p className="text-xs text-white/40">Kepada Yth.</p>
-            <p className="mt-1 text-base font-medium text-white/90">{guestName}</p>
+          <motion.div className="mt-8" variants={fadeUp}>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-ivory/60">
+              Kepada Yth.
+            </p>
+            <p className="mt-2 font-display text-2xl text-ivory">{guestName}</p>
           </motion.div>
         )}
 
         <motion.div
-          className="mt-4 h-px w-12 origin-center bg-white/25"
           variants={lineGrow}
           aria-hidden
-        />
+          className="mt-10 origin-center"
+        >
+          <FloralDivider className="h-6 w-40 text-ivory/55" />
+        </motion.div>
 
-        <motion.div variants={fadeUp}>
+        <motion.div variants={fadeUp} className="mt-10">
           <motion.button
             type="button"
             onClick={onOpen}
-            className="mt-2 rounded-full border border-white/30 bg-white/10 px-8 py-3 text-sm font-medium tracking-wide text-white backdrop-blur-sm transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            whileHover={{ scale: 1.03 }}
+            className="group inline-flex items-center gap-4 border border-ivory/60 bg-ink/30 px-9 py-4 text-[11px] font-medium uppercase tracking-[0.32em] text-ivory backdrop-blur-[2px] transition-colors hover:bg-ivory hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ivory"
+            whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            animate={{ scale: [1, 1.02, 1] }}
-            transition={{
-              scale: { repeat: Infinity, duration: 2.5, ease: "easeInOut" },
-            }}
           >
             Buka Undangan
+            <span className="h-px w-8 bg-current transition-all duration-500 group-hover:w-12" />
           </motion.button>
         </motion.div>
 
-        <motion.p className="mt-2 text-[11px] text-white/30" variants={fadeUp}>
+        <motion.p
+          className="mt-8 text-[10px] uppercase tracking-[0.28em] text-ivory/55"
+          variants={fadeUp}
+        >
           ♪ Musik akan diputar saat dibuka
         </motion.p>
       </motion.div>
