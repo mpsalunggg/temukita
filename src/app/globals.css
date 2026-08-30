@@ -27,6 +27,22 @@
   --gilt: #c2a45f;
   --pearl: #f3efe9;
   --pearl-soft: #a9b3ac;
+
+  /* Template 4 — monochrome editorial. Deliberately neutral: every other
+     palette here is warm, and any warmth at all fights photos that have been
+     forced to grayscale. */
+  --noir: #0b0b0b;
+  --noir-soft: #171717;
+  --paper: #efece7;
+  --paper-dim: #d8d4cd;
+
+  /* Template 5 — sepia editorial. Warm and dusty on purpose: every other
+     palette here is either cool or clean, and both fight photographs that have
+     been pushed to sepia. */
+  --sand: #ddd5c4;
+  --sand-deep: #cec4b0;
+  --umber: #2f2b25;
+  --umber-soft: #5c5449;
 }
 
 @theme inline {
@@ -50,13 +66,37 @@
   --color-gilt: var(--gilt);
   --color-pearl: var(--pearl);
   --color-pearl-soft: var(--pearl-soft);
-  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-cormorant), ui-serif, Georgia, "Times New Roman",
+  --color-noir: var(--noir);
+  --color-noir-soft: var(--noir-soft);
+  --color-paper: var(--paper);
+  --color-paper-dim: var(--paper-dim);
+  --color-sand: var(--sand);
+  --color-sand-deep: var(--sand-deep);
+  --color-umber: var(--umber);
+  --color-umber-soft: var(--umber-soft);
+  /*
+   * Every var() here carries its own fallback, and that is load-bearing.
+   * Each template loads only the faces it uses, from its own layout, so on any
+   * given route most of these --font-* variables are undefined. A bare
+   * var(--undefined) makes the WHOLE font-family declaration invalid, and the
+   * element then silently inherits the body face instead of using the generics
+   * listed after it — which is exactly how template 1 lost Instrument Serif
+   * and rendered in Bricolage. The inner fallback keeps the declaration valid.
+   */
+  --font-sans: var(--font-bricolage, ui-sans-serif), ui-sans-serif, system-ui,
+    sans-serif;
+  --font-serif: var(--font-cormorant, ui-serif), ui-serif, Georgia,
+    "Times New Roman", serif;
+  --font-display: var(--font-instrument, ui-serif),
+    var(--font-cormorant, ui-serif), ui-serif, Georgia, serif;
+  --font-engraved: var(--font-cinzel, ui-serif), ui-serif, Georgia, serif;
+  --font-smallcaps: var(--font-cormorant-sc, ui-serif), ui-serif, Georgia,
     serif;
-  --font-display: var(--font-instrument), var(--font-cormorant), ui-serif,
-    Georgia, serif;
-  --font-engraved: var(--font-cinzel), ui-serif, Georgia, serif;
-  --font-smallcaps: var(--font-cormorant-sc), ui-serif, Georgia, serif;
+  --font-grotesk: var(--font-space, ui-sans-serif), ui-sans-serif, system-ui,
+    sans-serif;
+  --font-script: var(--font-pinyon, ui-serif), ui-serif, cursive;
+  --font-mono: var(--font-plex-mono, ui-monospace), ui-monospace,
+    SFMono-Regular, Menlo, monospace;
 }
 
 body {
