@@ -1,3 +1,6 @@
+import { Reveal } from './Reveal'
+import { Section, SectionHeading } from './ui'
+
 const steps = [
   {
     step: '01',
@@ -18,37 +21,38 @@ const steps = [
 
 export function LandingHowItWorks() {
   return (
-    <section
-      id="cara-kerja"
-      className="border-b border-border/60 bg-background py-20 sm:py-28"
-      aria-labelledby="cara-kerja-heading"
-    >
-      <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <h2
+    <Section id="cara-kerja" labelledBy="cara-kerja-heading">
+      <Reveal>
+        <SectionHeading
           id="cara-kerja-heading"
-          className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
+          eyebrow="Alur"
+          title={
+            <>
+              Cara <span className="text-accent">kerja</span>
+            </>
+          }
         >
-          Cara kerja
-        </h2>
-        <p className="mt-3 max-w-2xl text-subtle">
           Tiga langkah sederhana dari ide hingga undangan yang bisa dibagikan.
-        </p>
-        <ol className="mt-14 grid gap-10 sm:grid-cols-3">
-          {steps.map((s) => (
-            <li key={s.step}>
-              <span className="text-xs font-semibold uppercase tracking-widest text-accent">
+        </SectionHeading>
+      </Reveal>
+
+      <ol className="mt-14 grid gap-10 sm:grid-cols-3">
+        {steps.map((s, i) => (
+          <Reveal key={s.step} delay={i * 0.08}>
+            <li>
+              <span className="inline-flex h-7 items-center rounded-full bg-accent/10 px-2.5 text-xs font-bold tabular-nums tracking-wider text-accent ring-1 ring-inset ring-accent/15">
                 {s.step}
               </span>
-              <h3 className="mt-2 text-lg font-semibold text-foreground">
+              <h3 className="mt-3 text-lg font-semibold text-foreground">
                 {s.title}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-subtle">
                 {s.text}
               </p>
             </li>
-          ))}
-        </ol>
-      </div>
-    </section>
+          </Reveal>
+        ))}
+      </ol>
+    </Section>
   )
 }

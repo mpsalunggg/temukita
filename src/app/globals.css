@@ -9,6 +9,40 @@
   --accent-hover: #1d4ed8;
   --border: #e5e7eb;
   --ring: #93c5fd;
+
+  /* Invitation palette — editorial botanical. Scoped to the templates, the
+     landing page keeps the tokens above. */
+  --ivory: #fdfbf7;
+  --cream: #f4efe6;
+  --sage: #7c8a63;
+  --sage-soft: #cdd3bd;
+  --ink: #23211d;
+  --ink-soft: #6b665e;
+
+  /* Template 2 — midnight botanical. */
+  --forest: #0f1c17;
+  --forest-deep: #091210;
+  --blush: #e8c4c0;
+  /* antique gold, not brass — #c9a227 went acidic as a solid button fill */
+  --gilt: #c2a45f;
+  --pearl: #f3efe9;
+  --pearl-soft: #a9b3ac;
+
+  /* Template 4 — monochrome editorial. Deliberately neutral: every other
+     palette here is warm, and any warmth at all fights photos that have been
+     forced to grayscale. */
+  --noir: #0b0b0b;
+  --noir-soft: #171717;
+  --paper: #efece7;
+  --paper-dim: #d8d4cd;
+
+  /* Template 5 — sepia editorial. Warm and dusty on purpose: every other
+     palette here is either cool or clean, and both fight photographs that have
+     been pushed to sepia. */
+  --sand: #ddd5c4;
+  --sand-deep: #cec4b0;
+  --umber: #2f2b25;
+  --umber-soft: #5c5449;
 }
 
 @theme inline {
@@ -20,11 +54,144 @@
   --color-accent-hover: var(--accent-hover);
   --color-border: var(--border);
   --color-ring: var(--ring);
-  --font-sans: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --color-ivory: var(--ivory);
+  --color-cream: var(--cream);
+  --color-sage: var(--sage);
+  --color-sage-soft: var(--sage-soft);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-forest: var(--forest);
+  --color-forest-deep: var(--forest-deep);
+  --color-blush: var(--blush);
+  --color-gilt: var(--gilt);
+  --color-pearl: var(--pearl);
+  --color-pearl-soft: var(--pearl-soft);
+  --color-noir: var(--noir);
+  --color-noir-soft: var(--noir-soft);
+  --color-paper: var(--paper);
+  --color-paper-dim: var(--paper-dim);
+  --color-sand: var(--sand);
+  --color-sand-deep: var(--sand-deep);
+  --color-umber: var(--umber);
+  --color-umber-soft: var(--umber-soft);
+  /*
+   * Every var() here carries its own fallback, and that is load-bearing.
+   * Each template loads only the faces it uses, from its own layout, so on any
+   * given route most of these --font-* variables are undefined. A bare
+   * var(--undefined) makes the WHOLE font-family declaration invalid, and the
+   * element then silently inherits the body face instead of using the generics
+   * listed after it — which is exactly how template 1 lost Instrument Serif
+   * and rendered in Bricolage. The inner fallback keeps the declaration valid.
+   */
+  --font-sans: var(--font-bricolage, ui-sans-serif), ui-sans-serif, system-ui,
+    sans-serif;
+  --font-serif: var(--font-cormorant, ui-serif), ui-serif, Georgia,
+    "Times New Roman", serif;
+  --font-display: var(--font-instrument, ui-serif),
+    var(--font-cormorant, ui-serif), ui-serif, Georgia, serif;
+  --font-engraved: var(--font-cinzel, ui-serif), ui-serif, Georgia, serif;
+  --font-smallcaps: var(--font-cormorant-sc, ui-serif), ui-serif, Georgia,
+    serif;
+  --font-grotesk: var(--font-space, ui-sans-serif), ui-sans-serif, system-ui,
+    sans-serif;
+  --font-script: var(--font-pinyon, ui-serif), ui-serif, cursive;
+  --font-mono: var(--font-plex-mono, ui-monospace), ui-monospace,
+    SFMono-Regular, Menlo, monospace;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+}
+
+/* Gentle drifting motion for decorative wave/blob accents. */
+@keyframes wave-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-2%, -8px, 0);
+  }
+}
+
+.animate-wave-drift {
+  animation: wave-drift 9s ease-in-out infinite;
+}
+
+/* Slow, breathing sway for decorative botanical line-art. */
+@keyframes petal-sway {
+  0%,
+  100% {
+    transform: rotate(-2.5deg);
+  }
+  50% {
+    transform: rotate(2.5deg);
+  }
+}
+
+.animate-petal-sway {
+  transform-origin: bottom center;
+  animation: petal-sway 7s ease-in-out infinite;
+}
+
+/*
+ * Film grain. Applied to a `relative` element; paints a fixed-size noise tile
+ * over the whole box so flat cream/ink fields read as printed paper rather
+ * than flat #hex.
+ */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+/*
+ * Lighter veil for tall portraits. The default gradient is tuned for wide
+ * photos; on a 3:4 crop it reaches full strength across the subject's body and
+ * the picture goes to black.
+ */
+.veil-soft::after {
+  background-image: linear-gradient(
+    to bottom,
+    rgb(15 28 23 / 0.18),
+    rgb(9 18 16 / 0.45)
+  );
+}
+
+/* Dark sections need the grain lifted, overlay all but vanishes on near-black. */
+.grain-dark::after {
+  opacity: 0.09;
+  mix-blend-mode: soft-light;
+}
+
+/*
+ * Midnight veil. Template 2 pulls 16 photos from a dozen different shoots;
+ * without one shared tint they read as a moodboard rather than one wedding.
+ * Every photo gets this over it, no exceptions.
+ */
+.veil::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(
+    to bottom,
+    rgb(15 28 23 / 0.45),
+    rgb(9 18 16 / 0.8)
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-wave-drift,
+  .animate-petal-sway {
+    animation: none;
+  }
 }
