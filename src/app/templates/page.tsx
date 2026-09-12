@@ -61,9 +61,18 @@ const templates = [
     name: 'Sepia',
     tagline: 'Cokelat hangat, huruf kaligrafi, teks mesin tik',
     description:
-      'Semua foto bernuansa sepia, nama mempelai dalam kaligrafi mengalir, dan seluruh teks memakai huruf mesin tik berjarak lebar. Paling lembut dan paling hangat dari kelimanya.',
+      'Semua foto bernuansa sepia, nama mempelai dalam kaligrafi mengalir, dan seluruh teks memakai huruf mesin tik berjarak lebar. Paling lembut dan paling hangat dari keenamnya.',
     image: '/images/landing/template5.jpg',
     swatches: ['#2f2b25', '#ddd5c4', '#cec4b0'],
+  },
+  {
+    href: '/template6',
+    name: "Syar'i",
+    tagline: 'Putih, kaligrafi Arab, ornamen geometris',
+    description:
+      'Dasar putih dengan kaligrafi Arab, ornamen bintang delapan, dan aksen hijau zaitun tua. Satu-satunya yang tidak menampilkan foto mempelai — yang tampil nama, doa, dan informasi acara.',
+    image: '/images/landing/template6.jpg',
+    swatches: ['#fdfdfb', '#46543f', '#9d8757'],
   },
 ]
 
@@ -102,7 +111,7 @@ export default function TemplatesPage() {
                 </>
               }
             >
-              Lima gaya, isi dan fitur yang sama. Buka contohnya dulu — semuanya
+              Enam gaya, isi dan fitur yang sama. Buka contohnya dulu — semuanya
               bisa dilihat penuh tanpa daftar akun.
             </SectionHeading>
           </Reveal>

@@ -43,6 +43,16 @@
   --sand-deep: #cec4b0;
   --umber: #2f2b25;
   --umber-soft: #5c5449;
+
+  /* Template 6 — syar'i, white based. The green is pushed well down: a fresh
+     green reads cheerful, and this invitation is meant to read calm. Distinct
+     from --sage above, which is lighter and much greener. */
+  --parchment: #fdfdfb;
+  --parchment-dim: #f3f2ed;
+  --olive: #46543f;
+  --olive-soft: #7b8574;
+  --brass: #9d8757;
+  --ink-deep: #1e211c;
 }
 
 @theme inline {
@@ -74,6 +84,12 @@
   --color-sand-deep: var(--sand-deep);
   --color-umber: var(--umber);
   --color-umber-soft: var(--umber-soft);
+  --color-parchment: var(--parchment);
+  --color-parchment-dim: var(--parchment-dim);
+  --color-olive: var(--olive);
+  --color-olive-soft: var(--olive-soft);
+  --color-brass: var(--brass);
+  --color-ink-deep: var(--ink-deep);
   /*
    * Every var() here carries its own fallback, and that is load-bearing.
    * Each template loads only the faces it uses, from its own layout, so on any
@@ -97,6 +113,8 @@
   --font-script: var(--font-pinyon, ui-serif), ui-serif, cursive;
   --font-mono: var(--font-plex-mono, ui-monospace), ui-monospace,
     SFMono-Regular, Menlo, monospace;
+  --font-arabic: var(--font-amiri-quran, ui-serif), ui-serif, serif;
+  --font-roman: var(--font-marcellus, ui-serif), ui-serif, Georgia, serif;
 }
 
 body {
