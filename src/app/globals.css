@@ -53,6 +53,29 @@
   --olive-soft: #7b8574;
   --brass: #9d8757;
   --ink-deep: #1e211c;
+
+  /* Template 7 — akikah, sage and cream. A baby invitation, so the whole scale
+     is soft: nothing here is saturated and nothing is truly white. The greens
+     are greyed rather than fresh, which is what keeps a nursery palette from
+     turning into a children's party. Distinct from --sage (t1, yellower) and
+     --olive (t6, much darker).
+
+     --moss is one step darker than the reference's button fill (#73856c): white
+     on that green lands at 3.96:1, under AA. This reads identically and passes
+     at 4.75:1.
+
+     --gold and --leaf are ornament colours. Both fail AA as body text on every
+     band here, so they are only ever used for hairlines, leaves and icons. */
+  --milk: #faf5ed;
+  --milk-pure: #faf7f1;
+  --fern-mist: #edf1e9;
+  --fern-veil: #e4e9de;
+  --fern-blob: #cbd1c0;
+  --pine: #30453f;
+  --moss: #66785f;
+  --leaf: #829379;
+  --gold: #d8b688;
+  --bark: #414543;
 }
 
 @theme inline {
@@ -90,6 +113,16 @@
   --color-olive-soft: var(--olive-soft);
   --color-brass: var(--brass);
   --color-ink-deep: var(--ink-deep);
+  --color-milk: var(--milk);
+  --color-milk-pure: var(--milk-pure);
+  --color-fern-mist: var(--fern-mist);
+  --color-fern-veil: var(--fern-veil);
+  --color-fern-blob: var(--fern-blob);
+  --color-pine: var(--pine);
+  --color-moss: var(--moss);
+  --color-leaf: var(--leaf);
+  --color-gold: var(--gold);
+  --color-bark: var(--bark);
   /*
    * Every var() here carries its own fallback, and that is load-bearing.
    * Each template loads only the faces it uses, from its own layout, so on any
@@ -115,6 +148,9 @@
     SFMono-Regular, Menlo, monospace;
   --font-arabic: var(--font-amiri-quran, ui-serif), ui-serif, serif;
   --font-roman: var(--font-marcellus, ui-serif), ui-serif, Georgia, serif;
+  --font-book: var(--font-lora, ui-serif), ui-serif, Georgia, serif;
+  --font-round: var(--font-nunito, ui-sans-serif), ui-sans-serif, system-ui,
+    sans-serif;
 }
 
 body {

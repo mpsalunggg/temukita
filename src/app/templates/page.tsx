@@ -19,7 +19,18 @@ export const metadata: Metadata = {
  * same way after a template redesign — a stock photo here would show the
  * photography rather than the layout, which is the thing being chosen.
  */
-const templates = [
+type TemplateCard = {
+  href: string
+  name: string
+  /** Set only when a template is not a wedding invitation. */
+  category?: string
+  tagline: string
+  description: string
+  image: string
+  swatches: string[]
+}
+
+const templates: TemplateCard[] = [
   {
     href: '/template1',
     name: 'Botanis',
@@ -61,7 +72,7 @@ const templates = [
     name: 'Sepia',
     tagline: 'Cokelat hangat, huruf kaligrafi, teks mesin tik',
     description:
-      'Semua foto bernuansa sepia, nama mempelai dalam kaligrafi mengalir, dan seluruh teks memakai huruf mesin tik berjarak lebar. Paling lembut dan paling hangat dari keenamnya.',
+      'Semua foto bernuansa sepia, nama mempelai dalam kaligrafi mengalir, dan seluruh teks memakai huruf mesin tik berjarak lebar. Paling lembut dan paling hangat dari enam undangan pernikahan di sini.',
     image: '/images/landing/template5.jpg',
     swatches: ['#2f2b25', '#ddd5c4', '#cec4b0'],
   },
@@ -73,6 +84,16 @@ const templates = [
       'Dasar putih dengan kaligrafi Arab, ornamen bintang delapan, dan aksen hijau zaitun tua. Satu-satunya yang tidak menampilkan foto mempelai — yang tampil nama, doa, dan informasi acara.',
     image: '/images/landing/template6.jpg',
     swatches: ['#fdfdfb', '#46543f', '#9d8757'],
+  },
+  {
+    href: '/template7',
+    name: 'Mungil',
+    category: 'Akikah',
+    tagline: 'Sage lembut, ilustrasi bayi, tanpa foto',
+    description:
+      'Satu-satunya yang bukan undangan pernikahan. Hijau sage di atas krem, ilustrasi bayi yang digambar tangan, dan ranting daun — tidak memakai foto sama sekali. Isinya ringkas: salam, detail acara, tanda kasih, dan doa.',
+    image: '/images/landing/template7.jpg',
+    swatches: ['#faf5ed', '#66785f', '#d8b688'],
   },
 ]
 
@@ -111,8 +132,9 @@ export default function TemplatesPage() {
                 </>
               }
             >
-              Enam gaya, isi dan fitur yang sama. Buka contohnya dulu — semuanya
-              bisa dilihat penuh tanpa daftar akun.
+              Tujuh gaya: enam undangan pernikahan dan satu tasyakuran akikah.
+              Buka contohnya dulu — semuanya bisa dilihat penuh tanpa daftar
+              akun.
             </SectionHeading>
           </Reveal>
 
@@ -128,6 +150,15 @@ export default function TemplatesPage() {
                       sizes="(min-width: 640px) 30rem, 90vw"
                       className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
                     />
+
+                    {/* Only the non-wedding templates are labelled. A baby
+                        invitation sitting unmarked in a grid of weddings reads
+                        as a mistake. */}
+                    {t.category && (
+                      <span className="absolute top-3 left-3 rounded-full bg-black/35 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
+                        {t.category}
+                      </span>
+                    )}
 
                     {/* Scrim only at the foot, so the swatches read on any
                         thumbnail without dimming the design being shown. */}
@@ -189,8 +220,8 @@ export default function TemplatesPage() {
 
           <Reveal className="mt-14 text-sm text-subtle">
             <p>
-              Semua template mendapat fitur yang sama — yang membedakan paket
-              hanya kuota.{' '}
+              Semua template pernikahan mendapat fitur yang sama — yang
+              membedakan paket hanya kuota.{' '}
               <Link
                 href="/#harga"
                 className="font-semibold text-accent underline-offset-4 hover:underline"
