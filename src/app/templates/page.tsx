@@ -86,7 +86,7 @@ const templates: TemplateCard[] = [
     swatches: ['#fdfdfb', '#46543f', '#9d8757'],
   },
   {
-    href: '/template7',
+    href: '/azhaliya-inayah-safia',
     name: 'Mungil',
     category: 'Akikah',
     tagline: 'Pink lembut, ilustrasi bayi, tanpa foto',
