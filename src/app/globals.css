@@ -43,6 +43,51 @@
   --sand-deep: #cec4b0;
   --umber: #2f2b25;
   --umber-soft: #5c5449;
+
+  /* Template 6 — syar'i, white based. The green is pushed well down: a fresh
+     green reads cheerful, and this invitation is meant to read calm. Distinct
+     from --sage above, which is lighter and much greener. */
+  --parchment: #fdfdfb;
+  --parchment-dim: #f3f2ed;
+  --olive: #46543f;
+  --olive-soft: #7b8574;
+  --brass: #9d8757;
+  --ink-deep: #1e211c;
+
+  /* Template 7 — akikah nursery. Sampled from the illustrated sheet the client
+     supplied, so the page and the artwork are the same pink rather than two
+     pinks that nearly agree. --rose #e4a89c is the sheet's own dominant accent:
+     it is 89% of the pill, and the heart and the calendar border.
+
+     --rose and --petal-blob are ornament colours — 1.9:1 and 1.3:1 on these
+     bands. Fills, hairlines and borders only, never text.
+
+     --rose-ink is two steps darker than the sheet's #a85c50, which fell to
+     3.95:1 on --petal-veil. At #9a4f43 the small tracked labels clear AA on all
+     four bands (4.77 at worst), and 10px labels are normal text for WCAG no
+     matter how bold they are.
+
+     --plum and --bark are the ink, and they are rose rather than brown on
+     purpose. They were #52302c and #4a3f3d — a brown-black and a grey-brown,
+     the two darkest things on a page that is meant to read pinky-white. Moving
+     them into the rose family drops the brown without dropping legibility:
+     7.24:1 at the very worst, against a 4.5 requirement. Text cannot go lighter
+     than this and stay readable, so this is the floor.
+
+     The button keeps the sheet's exact pill colour and takes --plum for its
+     label: white on --rose is 2.02:1, --plum on it is 5.71:1. */
+  /* Not --blush: template 2 got there first with a dusty rose, and two
+     declarations of one name in one :root means the later wins for everyone.
+     This one is nearly white, so it was also the worse claim on the word. */
+  --petal-pale: #fdf0eb;
+  --petal-white: #fdf6f3;
+  --petal-mist: #fbeae6;
+  --petal-veil: #f8e3de;
+  --petal-blob: #f3cfc8;
+  --rose: #e4a89c;
+  --rose-ink: #9a4f43;
+  --plum: #63374a;
+  --bark: #5c4348;
 }
 
 @theme inline {
@@ -74,6 +119,21 @@
   --color-sand-deep: var(--sand-deep);
   --color-umber: var(--umber);
   --color-umber-soft: var(--umber-soft);
+  --color-parchment: var(--parchment);
+  --color-parchment-dim: var(--parchment-dim);
+  --color-olive: var(--olive);
+  --color-olive-soft: var(--olive-soft);
+  --color-brass: var(--brass);
+  --color-ink-deep: var(--ink-deep);
+  --color-petal-pale: var(--petal-pale);
+  --color-petal-white: var(--petal-white);
+  --color-petal-mist: var(--petal-mist);
+  --color-petal-veil: var(--petal-veil);
+  --color-petal-blob: var(--petal-blob);
+  --color-rose: var(--rose);
+  --color-rose-ink: var(--rose-ink);
+  --color-plum: var(--plum);
+  --color-bark: var(--bark);
   /*
    * Every var() here carries its own fallback, and that is load-bearing.
    * Each template loads only the faces it uses, from its own layout, so on any
@@ -97,6 +157,63 @@
   --font-script: var(--font-pinyon, ui-serif), ui-serif, cursive;
   --font-mono: var(--font-plex-mono, ui-monospace), ui-monospace,
     SFMono-Regular, Menlo, monospace;
+  --font-arabic: var(--font-amiri-quran, ui-serif), ui-serif, serif;
+  --font-roman: var(--font-marcellus, ui-serif), ui-serif, Georgia, serif;
+  --font-book: var(--font-fraunces, ui-serif), ui-serif, Georgia, serif;
+  --font-text: var(--font-jakarta, ui-sans-serif), ui-sans-serif, system-ui,
+    sans-serif;
+
+  /*
+   * Template 7's type scale — a perfect fourth (1.333) off a 16px body, which
+   * is what The Elements of Typographic Style would reach for when a page has
+   * one very large moment and a lot of small quiet text.
+   *
+   * Each role carries its own leading and tracking, so a call site names a role
+   * rather than restating five numbers. Before this existed the page held 14
+   * distinct sizes, 7 line-heights and 5 tracking values, none of them related.
+   *
+   * --text-hero and --text-name are a clear step apart (3.5rem against
+   * 2.5rem). At a 1.17 ratio they read as two headlines arguing; at 1.4 the
+   * headline leads and the baby's name answers it.
+   *
+   * Leading sits in three bands and nothing falls between them: display 0.92 to
+   * 1.25, mid 1.6 to 1.7, reading 1.75. Tracking is negative on display sizes,
+   * where it is optical correction, and zero everywhere else — with one named
+   * exception, --text-label, which carries the 0.16em of a spaced capital. That
+   * exception exists so the one line that wants it stops being hand-rolled at
+   * two call sites; anything else wanting tracking should become a role too,
+   * not an override.
+   */
+  --text-hero: clamp(2.25rem, 6vw, 3.5rem);
+  --text-hero--line-height: 0.92;
+  --text-hero--letter-spacing: -0.035em;
+
+  --text-name: clamp(1.75rem, 4.4vw, 2.5rem);
+  --text-name--line-height: 1;
+  --text-name--letter-spacing: -0.01em;
+
+  --text-section: clamp(1.5rem, 3vw, 1.875rem);
+  --text-section--line-height: 1.2;
+  --text-section--letter-spacing: -0.012em;
+
+  --text-greet: clamp(1.125rem, 2.2vw, 1.375rem);
+  --text-greet--line-height: 1.25;
+
+  --text-lead: clamp(1.0625rem, 1.8vw, 1.25rem);
+  --text-lead--line-height: 1.7;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.75;
+
+  --text-meta: 0.875rem;
+  --text-meta--line-height: 1.6;
+
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.6;
+  --text-label--letter-spacing: 0.16em;
+
+  --text-fine: 0.8125rem;
+  --text-fine--line-height: 1.5;
 }
 
 body {
