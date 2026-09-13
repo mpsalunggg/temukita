@@ -89,11 +89,11 @@ const templates: TemplateCard[] = [
     href: '/template7',
     name: 'Mungil',
     category: 'Akikah',
-    tagline: 'Sage lembut, ilustrasi bayi, tanpa foto',
+    tagline: 'Pink lembut, ilustrasi bayi, tanpa foto',
     description:
-      'Satu-satunya yang bukan undangan pernikahan. Hijau sage di atas krem, ilustrasi bayi yang digambar tangan, dan ranting daun — tidak memakai foto sama sekali. Isinya ringkas: salam, detail acara, tanda kasih, dan doa.',
+      'Satu-satunya yang bukan undangan pernikahan. Merah muda lembut dengan ilustrasi cat air — bayi, pita, karangan bunga — dan tidak memakai foto sama sekali. Isinya ringkas: salam, detail acara, tanda kasih, dan doa.',
     image: '/images/landing/template7.jpg',
-    swatches: ['#faf5ed', '#66785f', '#d8b688'],
+    swatches: ['#fdf0eb', '#e4a89c', '#63374a'],
   },
 ]
 

@@ -1,187 +1,170 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
+import { useEffect, useRef, useState } from 'react'
 import { useParallax, useSmoothScroll, useStagger } from '../template1/scroll'
+import { Art } from './Art'
+import { Blob, Icon } from './Botanical'
+import { Template7Intro } from './Template7Intro'
+import { azhaliya, type AcaraIcon, type AkikahContent } from './content'
 import {
-  Blob,
-  HeartMark,
-  Icon,
-  LeafMark,
-  RuleWithHeart,
-  Sparkle,
-  Sprig,
-} from './Botanical'
-import { BabyGirl } from './BabyGirl'
+  BabyName,
+  Body,
+  Divider,
+  Eyebrow,
+  Label,
+  PillLink,
+  SectionTitle,
+  panel,
+} from './ui'
+import {
+  SIZE,
+  baby,
+  bow,
+  calendar,
+  clock,
+  cloud,
+  daisy,
+  daisySm,
+  heart,
+  heartSm,
+  pin,
+  star,
+} from './assets'
 
 /**
  * Template 7 — tasyakuran akikah.
  *
- * The only invitation here that is not a wedding, and the only one with no
- * intro gate, no music player, no countdown and no RSVP. That is the design
- * rather than an omission: an akikah invitation is an announcement, and the
- * reference it was drawn from is one uninterrupted poster. Because there is no
- * gate there is also no body-scroll lock and `useSmoothScroll` runs
- * unconditionally.
+ * The only invitation here that is not a wedding. It opens behind a cover like
+ * the others do — that is where the per-guest greeting from `?to=` lives — but
+ * it still has no music player, no countdown and no RSVP, which is the design
+ * rather than an omission: an akikah invitation is an announcement.
  *
- * It is also the only template with no photographs at all — the baby is drawn.
- * Photographs of somebody's newborn are exactly the thing a demo page should
- * not be showing.
+ * Nothing in here holds its own copy. Everything comes from an `AkikahContent`
+ * record, so a second family needs a new object rather than an edited
+ * component.
+ *
+ * Every ornament and the baby herself are cropped from one illustrated sheet
+ * the client supplied — see `assets.ts`. The foliage from that sheet is
+ * deliberately unused: it is olive, and this template is pinky-white. Still no
+ * photographs: a demo invitation has no business showing somebody's newborn.
  */
-
-/* ------------------------------------------------------------------ shared */
-
-/** Small tracked label above a value or a heading. */
-function Label({
-  children,
-  className = '',
-  ...rest
-}: { children: ReactNode; className?: string } & React.HTMLAttributes<HTMLSpanElement>) {
-  return (
-    <span
-      {...rest}
-      className={`text-[10px] font-semibold uppercase tracking-[0.32em] text-moss ${className}`}
-    >
-      {children}
-    </span>
-  )
-}
-
-function Heading({
-  children,
-  className = '',
-  ...rest
-}: {
-  children: ReactNode
-  className?: string
-} & React.HTMLAttributes<HTMLHeadingElement>) {
-  return (
-    <h2
-      {...rest}
-      className={`font-book font-semibold leading-[1.3] text-pine ${className}`}
-      style={{ fontSize: 'clamp(1.35rem, 3.6vw, 1.95rem)' }}
-    >
-      {children}
-    </h2>
-  )
-}
-
-function Body({
-  children,
-  className = '',
-  ...rest
-}: {
-  children: ReactNode
-  className?: string
-} & React.HTMLAttributes<HTMLParagraphElement>) {
-  return (
-    <p {...rest} className={`text-sm leading-[1.95] text-bark ${className}`}>
-      {children}
-    </p>
-  )
-}
-
-/** The two leaf glyphs that flank every section heading in the reference. */
-function Flanked({ children }: { children: ReactNode }) {
-  return (
-    <div className="flex items-center justify-center gap-3">
-      <LeafMark className="h-5 w-5 shrink-0 -scale-x-100 text-leaf" />
-      {children}
-      <LeafMark className="h-5 w-5 shrink-0 text-leaf" />
-    </div>
-  )
-}
 
 /* -------------------------------------------------------------------- hero */
 
-const BAYI = 'Khanza Almahyra'
-const ORANG_TUA = 'Rangga Prasetya & Aulia Rahmani'
-const TANGGAL = 'Sabtu, 20 Juni 2026'
-
-function HeroSection() {
+function HeroSection({ content }: { content: AkikahContent }) {
   const copy = useRef<HTMLDivElement>(null)
   const blob = useRef<HTMLDivElement>(null)
   useStagger(copy, '[data-fx]', { y: 18, stagger: 0.1, start: 'top 92%' })
   useParallax(blob, 6)
 
   return (
-    <section className="relative isolate overflow-hidden bg-milk px-6 pt-24 pb-20 sm:px-10 md:flex md:min-h-svh md:items-center md:py-24">
-      {/* Soft ground. Two sage shapes bleeding off the left, one barely-there
-          cream shape on the right — the reference's only "background".
+    <section className="relative isolate overflow-hidden bg-petal-pale px-5 py-12 sm:px-8 sm:py-16 md:min-h-svh md:flex md:items-center md:py-20">
+      {/* Soft ground. Two blush shapes bleeding off the left, one barely-there
+          pale shape on the right — the only "background" this page has.
 
           The big one moves on small screens: in a single column it would sit
-          under the name and the gold rule, and gold on sage is 1.2:1. Behind
-          the illustration it is decoration; behind the type it is a bug. */}
+          under the name and the divider, and the divider's pink on it is
+          1.2:1. Behind the illustration it is decoration; behind the type it is
+          a bug. */}
       <div ref={blob} className="pointer-events-none absolute inset-0" aria-hidden>
-        <Blob className="absolute -top-28 -left-32 h-[22rem] w-[22rem] text-fern-blob/80 md:top-auto md:-bottom-40 md:-left-44 md:h-[34rem] md:w-[34rem] motion-safe:animate-wave-drift" />
-        <Blob className="absolute -top-56 -left-28 h-[30rem] w-[30rem] rotate-[28deg] text-fern-mist" />
-        <Blob className="absolute -top-24 -right-52 hidden h-[34rem] w-[34rem] rotate-[140deg] text-milk-pure sm:block" />
+        <Blob className="absolute -top-28 -left-32 h-[22rem] w-[22rem] text-petal-blob/80 md:top-auto md:-bottom-40 md:-left-44 md:h-[34rem] md:w-[34rem] motion-safe:animate-wave-drift" />
+        <Blob className="absolute -top-56 -left-28 h-[30rem] w-[30rem] rotate-[28deg] text-petal-mist" />
+        <Blob className="absolute -top-24 -right-52 hidden h-[34rem] w-[34rem] rotate-[140deg] text-petal-white sm:block" />
       </div>
 
-      {/* Botanicals and sparks. Hidden on the narrowest screens, where they
-          land on top of the illustration instead of around it. */}
+      {/* Scatter. Hidden on the narrowest screens, where it lands on top of
+          the illustration instead of around it. Pink only — the sheet's
+          eucalyptus is the one olive thing in the palette. */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <Sprig className="absolute top-4 right-4 hidden h-28 w-auto rotate-[24deg] text-leaf sm:block md:h-36 motion-safe:animate-petal-sway" />
-        <Sprig className="absolute bottom-8 left-2 hidden h-32 w-auto -rotate-[18deg] -scale-x-100 text-leaf/85 sm:block md:h-44 motion-safe:animate-petal-sway" />
-        <Sparkle className="absolute top-[18%] left-[8%] hidden h-5 w-5 text-gold sm:block" />
-        <Sparkle className="absolute bottom-[24%] left-[38%] hidden h-4 w-4 text-gold/80 sm:block" />
-        <Sparkle className="absolute top-[52%] left-[30%] hidden h-3 w-3 text-gold/70 md:block" />
-        <HeartMark className="absolute top-[10%] left-[46%] hidden h-4 w-4 text-gold/80 md:block" />
+        <Art
+          src={daisy}
+          size={SIZE.daisy}
+          className="absolute top-6 right-6 hidden h-12 opacity-80 sm:block md:h-16 motion-safe:animate-petal-sway"
+        />
+        <Art
+          src={cloud}
+          size={SIZE.cloud}
+          className="absolute top-[12%] left-[6%] hidden h-14 opacity-80 md:block"
+        />
+        <Art
+          src={star}
+          size={SIZE.star}
+          className="absolute top-[26%] left-[18%] hidden h-6 sm:block"
+        />
+        <Art
+          src={heart}
+          size={SIZE.heart}
+          className="absolute top-[9%] left-[44%] hidden h-5 md:block"
+        />
+        <Art
+          src={heartSm}
+          size={SIZE.heartSm}
+          className="absolute bottom-[26%] left-[40%] hidden h-4 sm:block"
+        />
+        <Art
+          src={daisySm}
+          size={SIZE.daisySm}
+          className="absolute top-[56%] left-[8%] hidden h-7 md:block"
+        />
       </div>
 
-      <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 md:grid-cols-2 md:gap-10">
-        <div className="mx-auto w-[min(78vw,22rem)] md:w-full md:max-w-[30rem]">
-          <BabyGirl
+      {/* Not a 50/50 grid on one baseline — that is the stiffest arrangement
+          available. 1.1 : 1 with the illustration dropped, the same offset
+          device template 1 uses on its second portrait. */}
+      <div className="relative mx-auto grid w-full max-w-5xl items-center gap-8 md:grid-cols-[0.95fr_1.05fr] md:gap-16">
+        <div className="mx-auto w-[min(78vw,20rem)] md:w-full md:max-w-[26rem] motion-safe:animate-petal-sway">
+          {/* The one image on this page that means something, so it gets a real
+              alt and a real width. Native is 536px; capped here so it is never
+              blown up past its own resolution on a wide screen. */}
+          <Image
+            src={baby}
+            alt={`Ilustrasi bayi perempuan yang sedang tidur — ${content.bayi}`}
+            width={SIZE.baby[0]}
+            height={SIZE.baby[1]}
             className="h-auto w-full"
-            label={`Ilustrasi bayi perempuan yang sedang tidur — ${BAYI}`}
           />
         </div>
 
-        <div ref={copy} className="text-center">
-          <Label data-fx className="block">
-            Undangan
-          </Label>
-
-          <h1
-            data-fx
-            className="mt-5 font-book font-bold leading-[1.12] text-pine"
-            style={{ fontSize: 'clamp(2rem, 7vw, 3.3rem)' }}
-          >
+        {/* No `fetchPriority` here: this sits behind an opaque cover at load,
+            and the cover renders the same file. Two high-priority claims on one
+            image only make them compete. */}
+        <div ref={copy} className={`${panel.sheet} text-center`}>
+          {/* No "Undangan" eyebrow. The line under it reads Tasyakuran Akikah
+              at 3.5rem — a label announcing that an invitation is an invitation
+              is the kind of chrome that makes a page look assembled. */}
+          <h1 data-fx className="font-book text-hero font-semibold text-plum">
             {/* One span per line. Left to wrap on its own, "Tasyakuran" breaks
                 mid-word at the widths this template is actually read on. */}
             <span className="block">Tasyakuran</span>
             <span className="block">Akikah</span>
           </h1>
 
-          <p data-fx className="mt-4 text-sm text-bark/85">
-            Putri Kami
-          </p>
+          <Eyebrow data-fx className="mt-5">
+            {content.sebutan}
+          </Eyebrow>
 
-          <RuleWithHeart
-            data-fx
-            id="t7-rule-hero"
-            className="mx-auto mt-6 h-4 w-56 text-gold sm:w-64"
-          />
+          <Divider data-fx className="mt-8" />
 
-          <p
-            data-fx
-            className="mt-6 font-round italic text-moss"
-            style={{ fontSize: 'clamp(1.9rem, 6vw, 2.9rem)' }}
-          >
-            {BAYI}
-          </p>
+          {/* The whole page builds to this. Fraunces italic is the display
+              voice; Plus Jakarta Sans carries the information. */}
+          <BabyName data-fx className="mt-2">
+            {content.bayi}
+          </BabyName>
 
-          <p data-fx className="mt-5 text-sm leading-[1.9] text-bark">
-            Putri dari
-            <span className="mt-1 block">{ORANG_TUA}</span>
-          </p>
+          <Body data-fx className="mt-8 text-bark/85">
+            {content.sebutanOrangTua}
+            <span className="mt-2 block">{content.orangTua}</span>
+          </Body>
 
           <p
             data-fx
-            className="mt-8 inline-flex items-center gap-2.5 text-sm text-bark"
+            className={`${panel.chip} mt-8 inline-flex items-center gap-2.5 text-meta font-medium text-bark`}
           >
-            <Icon name="calendar" className="h-5 w-5 shrink-0 text-leaf" />
-            {TANGGAL}
+            <Art src={calendar} size={SIZE.calendar} className="relative h-5 shrink-0" />
+            {content.tanggal}
           </p>
         </div>
       </div>
@@ -191,44 +174,40 @@ function HeroSection() {
 
 /* ------------------------------------------------------------------- salam */
 
-function SalamSection() {
+function SalamSection({ content }: { content: AkikahContent }) {
   const root = useRef<HTMLElement>(null)
-  useStagger(root, '[data-fx]', { y: 16, stagger: 0.12 })
+  useStagger(root, '[data-fx]', { y: 18, stagger: 0.1 })
 
   return (
     <section
       ref={root}
-      className="relative overflow-hidden bg-milk-pure px-6 py-24 sm:px-10 sm:py-28"
+      className="relative overflow-hidden bg-petal-white px-5 py-16 sm:px-8 sm:py-20"
     >
-      <Sprig
-        className="absolute top-1/2 -left-10 hidden h-40 w-auto -translate-y-1/2 rotate-[12deg] text-leaf/45 lg:block"
+      <Art
+        src={heart}
+        size={SIZE.heart}
+        className="absolute top-1/2 -left-2 hidden h-10 -translate-y-1/2 opacity-50 lg:block"
       />
-      <Sprig
-        className="absolute top-1/2 -right-10 hidden h-40 w-auto -translate-y-1/2 -rotate-[12deg] -scale-x-100 text-leaf/45 lg:block"
+      <Art
+        src={heartSm}
+        size={SIZE.heartSm}
+        className="absolute top-1/2 -right-1 hidden h-8 -translate-y-1/2 opacity-50 lg:block"
       />
 
-      <div className="relative mx-auto max-w-xl text-center">
-        <LeafMark data-fx className="mx-auto h-6 w-6 text-leaf" />
+      <div className={`relative mx-auto max-w-2xl ${panel.sheet} text-center`}>
+        <Art data-fx src={daisy} size={SIZE.daisy} className="relative mx-auto h-8" />
 
-        <h2
-          data-fx
-          className="mt-6 font-book font-bold leading-[1.5] text-pine"
-          style={{ fontSize: 'clamp(1.05rem, 3vw, 1.4rem)' }}
-        >
-          Assalamu&rsquo;alaikum Warahmatullahi Wabarakatuh
+        {/* Not a SectionTitle: this is a greeting spoken to the reader, not a
+            label naming a block, so it takes no banner. */}
+        <h2 data-fx className="mt-5 font-book text-greet font-semibold text-plum">
+          {content.salam.pembuka}
         </h2>
 
-        <Body data-fx className="mt-6">
-          Dengan penuh rasa syukur kepada Allah SWT, kami mengundang
-          Bapak/Ibu/Saudara/i untuk hadir dalam acara tasyakuran akikah putri
-          kami.
+        <Body data-fx className="mt-5">
+          {content.salam.isi}
         </Body>
 
-        <RuleWithHeart
-          data-fx
-          id="t7-rule-salam"
-          className="mx-auto mt-10 h-4 w-56 text-gold sm:w-64"
-        />
+        <Divider data-fx className="mt-8" />
       </div>
     </section>
   )
@@ -236,69 +215,82 @@ function SalamSection() {
 
 /* ------------------------------------------------------------------- acara */
 
-const acara = [
-  {
-    icon: 'calendar' as const,
-    label: 'Hari & Tanggal',
-    lines: ['Sabtu, 20 Juni 2026'],
-  },
-  { icon: 'clock' as const, label: 'Waktu', lines: ['10.00 — 13.00 WIB'] },
-  { icon: 'dome' as const, label: 'Acara', lines: ['Tasyakuran Akikah'] },
-  {
-    icon: 'pin' as const,
-    label: 'Lokasi',
-    lines: ['Rumah Kami', 'Jl. Melati No. 12', 'Palu, Sulawesi Tengah'],
-  },
-]
+/**
+ * Icon name → artwork. The lookup lives here rather than in `content.ts` so a
+ * record stays free of imports and could come straight from a database.
+ */
+const ACARA_ART: Record<AcaraIcon, { src: string; size: readonly [number, number] }> = {
+  calendar: { src: calendar, size: SIZE.calendar },
+  clock: { src: clock, size: SIZE.clock },
+  bow: { src: bow, size: SIZE.bow },
+  pin: { src: pin, size: SIZE.pin },
+}
 
-const MAPS = 'https://www.google.com/maps/search/?api=1&query=Palu+Sulawesi+Tengah'
-
-function AcaraSection() {
+function AcaraSection({ content }: { content: AkikahContent }) {
   const root = useRef<HTMLElement>(null)
   useStagger(root, '[data-fx]', { y: 18, stagger: 0.1 })
 
   return (
     <section
       ref={root}
-      className="relative bg-fern-mist px-6 pt-24 pb-24 sm:px-10 sm:pt-28"
+      className="relative bg-petal-mist px-5 py-20 sm:px-8 sm:py-24"
     >
       {/* Filled with the colour of the band above, so the seam dissolves. */}
-      <SoftSeam className="text-milk-pure" />
+      <SoftSeam className="text-petal-white" />
 
-      <div className="relative mx-auto max-w-5xl">
-        <Flanked>
-          <Heading data-fx>Detail Acara</Heading>
-        </Flanked>
+      <div className="relative mx-auto max-w-4xl">
+        {/* The page's one breakout. The banner is pulled up across the seam so
+            it straddles the colour change instead of sitting politely below it
+            — the cheapest way to stop a stack of bands reading as boxes, and it
+            spends the client's own artwork doing it. Nothing else overlaps. */}
+        <div className="relative z-10 -mt-8 sm:-mt-10">
+          <SectionTitle>Detail Acara</SectionTitle>
+        </div>
 
-        <dl className="mt-14 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-leaf/30">
-          {acara.map((item) => (
-            <div key={item.label} data-fx className="px-2 text-center lg:px-6">
-              <Icon name={item.icon} className="mx-auto h-7 w-7 text-leaf" />
-              <dt className="mt-4 text-[10px] font-semibold uppercase tracking-[0.28em] text-moss">
-                {item.label}
-              </dt>
-              <dd className="mt-2 text-sm leading-[1.85] text-bark">
-                {item.lines.map((line) => (
-                  <span key={line} className="block">
-                    {line}
-                  </span>
-                ))}
-              </dd>
+        {/* Ragged left. Four facts read faster down a shared left edge than
+            across four centred columns. */}
+        <dl className="mt-8 grid gap-4 sm:grid-cols-2">
+          {content.acara.map((item) => (
+            <div
+              key={item.label}
+              data-fx
+              className={`${panel.tile} flex items-start gap-4 transition-transform duration-300 hover:-translate-y-1`}
+            >
+              {/* Fixed-width well, because the four icons have four different
+                  aspect ratios — the bow is half again as wide as the pin. Sized
+                  by height alone they would each start the text at a different
+                  x, and the column would lose the left edge it is built on. */}
+              <span className="flex w-11 shrink-0 justify-center">
+                <Art
+                  src={ACARA_ART[item.icon].src}
+                  size={ACARA_ART[item.icon].size}
+                  className="relative h-9"
+                />
+              </span>
+              <div>
+                <dt><Label>{item.label}</Label></dt>
+                <dd className="mt-2 text-body text-bark">
+                  {item.lines.map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))}
+                </dd>
+              </div>
             </div>
           ))}
         </dl>
 
-        <div data-fx className="mt-14 text-center">
-          <a
-            href={MAPS}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 rounded-full bg-moss px-8 py-3.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-milk transition-colors hover:bg-pine focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-moss"
-          >
+        <div data-fx className="mt-8 text-center">
+          {/* The sheet has a painted pill for this, but a picture of a button
+              is not a button: no focus ring, no selectable label, and a width
+              locked to whatever text was drawn into it. Only its colour is
+              borrowed. */}
+          <PillLink href={content.maps}>
             <Icon name="pin" className="h-4 w-4" />
-            Lihat Lokasi
+            Lihat lokasi
             <span className="sr-only">(buka di tab baru)</span>
-          </a>
+          </PillLink>
         </div>
       </div>
     </section>
@@ -311,7 +303,7 @@ function AcaraSection() {
  *
  * It sits *inside* the top of its own section and is filled with the colour of
  * the section above — the previous band spilling down with a soft edge. Placing
- * it above the section instead would paint cream on cream and vanish.
+ * it above the section instead would paint blush on blush and vanish.
  */
 function SoftSeam({ className }: { className: string }) {
   return (
@@ -331,169 +323,36 @@ function SoftSeam({ className }: { className: string }) {
   )
 }
 
-/* ---------------------------------------------------------------- rekening */
-
-const accounts = [
-  { bank: 'BSI', number: '7133 0049 21', holder: 'Rangga Prasetya' },
-  { bank: 'Mandiri', number: '1520 0088 4471', holder: 'Aulia Rahmani' },
-]
-
-function RekeningSection() {
-  const root = useRef<HTMLElement>(null)
-  useStagger(root, '[data-fx]', { y: 18, stagger: 0.1 })
-
-  const [copied, setCopied] = useState<string | null>(null)
-  const [message, setMessage] = useState('')
-  const timer = useRef<number | null>(null)
-
-  useEffect(() => {
-    return () => {
-      if (timer.current) window.clearTimeout(timer.current)
-    }
-  }, [])
-
-  async function copy(bank: string, number: string) {
-    const plain = number.replace(/\s/g, '')
-    let ok = false
-
-    // `navigator.clipboard` only exists in a secure context. These pages get
-    // opened from WhatsApp and previewed over plain http on a LAN, where the
-    // property is undefined — so this is an optional-chain, not just a catch.
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(plain)
-        ok = true
-      }
-    } catch {
-      ok = false
-    }
-
-    if (!ok) ok = legacyCopy(plain)
-
-    setCopied(ok ? bank : null)
-    setMessage(
-      ok
-        ? `Nomor rekening ${bank} disalin.`
-        : `Gagal menyalin. Nomor rekening ${bank}: ${plain}`,
-    )
-
-    if (timer.current) window.clearTimeout(timer.current)
-    timer.current = window.setTimeout(() => {
-      setCopied(null)
-      setMessage('')
-    }, 2400)
-  }
-
-  return (
-    <section
-      ref={root}
-      className="relative bg-fern-mist px-6 pb-28 sm:px-10"
-      aria-labelledby="t7-rekening"
-    >
-      <div className="relative mx-auto max-w-2xl">
-        <Flanked>
-          <Heading data-fx id="t7-rekening">
-            Tanda Kasih
-          </Heading>
-        </Flanked>
-
-        <Body data-fx className="mt-6 text-center">
-          Doa dan kehadiran Anda sudah lebih dari cukup bagi kami. Bila ingin
-          memberi lebih, kami menerimanya dengan penuh syukur.
-        </Body>
-
-        <ul className="mt-10 grid gap-5 sm:grid-cols-2">
-          {accounts.map((a) => (
-            <li
-              key={a.bank}
-              data-fx
-              className="rounded-2xl border border-leaf/30 bg-milk-pure p-6 text-left"
-            >
-              <Label className="block">{a.bank}</Label>
-              <p className="mt-3 text-lg tabular-nums tracking-[0.12em] text-pine">
-                {a.number}
-              </p>
-              <p className="mt-1 text-xs text-bark/80">a.n. {a.holder}</p>
-
-              <button
-                type="button"
-                onClick={() => copy(a.bank, a.number)}
-                className="mt-5 inline-flex items-center gap-2 rounded-full border border-moss/45 px-5 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-moss transition-colors hover:bg-moss hover:text-milk focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-moss"
-              >
-                {copied === a.bank && <Icon name="check" className="h-3.5 w-3.5" />}
-                {copied === a.bank ? 'Tersalin' : 'Salin'}
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        {/* One live region for the whole section, mounted outside the list so a
-            card re-render cannot remount it — a remounted region never speaks. */}
-        <p role="status" aria-live="polite" className="sr-only">
-          {message}
-        </p>
-      </div>
-    </section>
-  )
-}
-
-/** Last resort for insecure contexts. `execCommand` is deprecated and is also
- *  the only thing that works there, so it stays until that changes. */
-function legacyCopy(text: string) {
-  try {
-    const field = document.createElement('textarea')
-    field.value = text
-    field.setAttribute('readonly', '')
-    field.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none'
-    document.body.appendChild(field)
-    field.select()
-    const ok = document.execCommand('copy')
-    document.body.removeChild(field)
-    return ok
-  } catch {
-    return false
-  }
-}
-
 /* --------------------------------------------------------------------- doa */
 
-function DoaSection() {
+function DoaSection({ content }: { content: AkikahContent }) {
   const root = useRef<HTMLElement>(null)
   useStagger(root, '[data-fx]', { y: 18, stagger: 0.1 })
 
   return (
     <section
       ref={root}
-      className="relative bg-fern-veil px-6 pt-24 pb-16 sm:px-10 sm:pt-28"
+      // The page's pacing outlier: the other bands sit at py-20, this one gets
+      // py-24, because it is what the invitation is actually for.
+      className="relative bg-petal-veil px-5 py-20 sm:px-8 sm:py-24"
     >
-      <SoftSeam className="text-fern-mist" />
+      <SoftSeam className="text-petal-mist" />
 
-      <div className="relative mx-auto max-w-2xl text-center">
-        <Flanked>
-          <Heading data-fx>Doa &amp; Harapan</Heading>
-        </Flanked>
+      <div className={`relative mx-auto max-w-2xl ${panel.sheet} text-center`}>
+        <SectionTitle>Doa &amp; Harapan</SectionTitle>
 
         <blockquote
           data-fx
-          className="mt-8 font-book italic leading-[1.85] text-pine"
-          style={{ fontSize: 'clamp(0.95rem, 2.6vw, 1.1rem)' }}
+          className="mx-auto mt-8 font-book text-lead text-plum italic"
         >
-          <span className="block">
-            &ldquo;Semoga Ananda tumbuh menjadi anak yang sehat,
-          </span>
-          <span className="block">
-            sholehah, berbakti kepada kedua orang tua,
-          </span>
-          <span className="block">
-            berguna bagi agama, bangsa, dan negara.&rdquo;
-          </span>
+          {content.doa.map((line) => (
+            <span key={line} className="block">
+              {line}
+            </span>
+          ))}
         </blockquote>
 
-        <RuleWithHeart
-          data-fx
-          id="t7-rule-doa"
-          className="mx-auto mt-10 h-4 w-56 text-gold sm:w-64"
-        />
+        <Divider data-fx className="mt-8" />
       </div>
     </section>
   )
@@ -501,44 +360,42 @@ function DoaSection() {
 
 /* ----------------------------------------------------------------- penutup */
 
-function PenutupSection() {
+function PenutupSection({ content }: { content: AkikahContent }) {
   const root = useRef<HTMLElement>(null)
-  useStagger(root, '[data-fx]', { y: 14, stagger: 0.08 })
+  useStagger(root, '[data-fx]', { y: 18, stagger: 0.1 })
 
   return (
     <section
       ref={root}
-      className="relative overflow-hidden bg-fern-veil px-6 pt-8 pb-24 text-center sm:px-10 sm:pb-28"
+      className="relative overflow-hidden bg-petal-veil px-5 pt-5 pb-20 text-center sm:px-8 sm:pb-24"
     >
-      <Sprig
-        className="absolute -bottom-6 -left-8 h-40 w-auto rotate-[18deg] text-leaf/75 sm:h-56 md:h-64 motion-safe:animate-petal-sway"
+      <Art
+        src={daisy}
+        size={SIZE.daisy}
+        className="absolute -bottom-2 -left-5 h-20 opacity-70 sm:h-28 md:h-32 motion-safe:animate-petal-sway"
       />
-      <Sprig
-        className="absolute -right-8 -bottom-6 h-40 w-auto -rotate-[18deg] -scale-x-100 text-leaf/75 sm:h-56 md:h-64 motion-safe:animate-petal-sway"
+      <Art
+        src={daisySm}
+        size={SIZE.daisySm}
+        className="absolute -right-5 -bottom-2 h-20 -scale-x-100 opacity-70 sm:h-28 md:h-32 motion-safe:animate-petal-sway"
       />
 
-      <div className="relative mx-auto max-w-md">
-        <Body data-fx>
-          Terima kasih atas doa dan kehadiran Bapak/Ibu/Saudara/i
-        </Body>
+      <div className="relative mx-auto max-w-2xl">
+        <Body data-fx>{content.penutup.terimaKasih}</Body>
 
-        <p data-fx className="mt-8 text-xs tracking-[0.06em] text-bark/80">
-          Kami yang berbahagia,
+        <p data-fx className="mt-8 text-meta text-bark/80">
+          {content.penutup.salam}
         </p>
 
-        <p
-          data-fx
-          className="mt-3 font-round italic text-moss"
-          style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)' }}
-        >
-          Keluarga Besar
+        <p data-fx className="mt-2 font-book text-section text-rose-ink italic">
+          {content.penutup.keluarga}
         </p>
 
-        <p data-fx className="mt-14 text-[10px] uppercase tracking-[0.28em] text-moss/80">
+        <p data-fx className="mt-16 text-fine text-rose-ink/80">
           Dibuat dengan{' '}
           <Link
             href="/"
-            className="underline decoration-moss/40 underline-offset-4 transition-colors hover:text-pine"
+            className="underline decoration-rose-ink/40 underline-offset-4 transition-colors hover:text-plum"
           >
             Temukita
           </Link>
@@ -550,21 +407,71 @@ function PenutupSection() {
 
 /* -------------------------------------------------------------------- page */
 
-export function Template7Page() {
-  useSmoothScroll(true)
+type PageProps = {
+  /** The invitation to render. Defaults to the demo family. */
+  content?: AkikahContent
+  /** Supplied directly, e.g. from a database. Otherwise read from `?to=`. */
+  guestName?: string
+}
+
+export function Template7Page({ content = azhaliya, guestName }: PageProps) {
+  const [opened, setOpened] = useState(false)
+
+  // Smooth scrolling only after the cover is gone — Lenis binding to a page
+  // nobody can scroll yet just fights the overflow lock below.
+  useSmoothScroll(opened)
+
+  useEffect(() => {
+    document.body.style.overflow = opened ? '' : 'hidden'
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [opened])
 
   return (
-    // `font-round` is load-bearing: `body` in globals.css sets the Bricolage
-    // stack, so body copy only picks up Nunito if the template opts in.
-    // `overflow-x-clip`, not `hidden` — `hidden` breaks ScrollTrigger, and the
-    // hero blobs really do bleed past the left edge.
-    <div className="overflow-x-clip bg-milk font-round text-bark">
-      <HeroSection />
-      <SalamSection />
-      <AcaraSection />
-      <RekeningSection />
-      <DoaSection />
-      <PenutupSection />
-    </div>
+    <>
+      <AnimatePresence mode="wait">
+        {!opened && (
+          <motion.div
+            key="intro"
+            className="fixed inset-0 z-100 overflow-y-auto"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <Template7Intro
+              content={content}
+              guestName={guestName}
+              onOpen={() => setOpened(true)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* `font-text` is load-bearing: `body` in globals.css sets the Bricolage
+          stack, so body copy only picks up Jakarta Sans if the template opts in.
+          `overflow-x-clip`, not `hidden` — `hidden` breaks ScrollTrigger, and
+          the hero blobs really do bleed past the left edge.
+
+          The variation settings are Fraunces' SOFT axis, set once and
+          inherited. Jakarta Sans has no such axis and simply ignores it, and
+          naming neither `wght` nor `opsz` here leaves font-weight and optical
+          sizing alone.
+
+          SOFT is at its maximum. Checked against SOFT 0 side by side: at 0 the
+          serifs come to sharp points, at 100 the terminals swell and round off.
+          The second is what a loaded brush does to an edge, which is the whole
+          reason this face was chosen over another bookish serif. */}
+      <div
+        className="overflow-x-clip overscroll-y-none bg-petal-pale font-text text-bark"
+        style={{ fontVariationSettings: "'SOFT' 100, 'WONK' 0" }}
+      >
+        <HeroSection content={content} />
+        <SalamSection content={content} />
+        <AcaraSection content={content} />
+        <DoaSection content={content} />
+        <PenutupSection content={content} />
+      </div>
+    </>
   )
 }
